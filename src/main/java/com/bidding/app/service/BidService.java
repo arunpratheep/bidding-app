@@ -29,18 +29,18 @@ public interface BidService {
 	/**
 	 * Function to get bid by bidId
 	 *
-	 * @param bidBean the id for the bid to be fetched
+	 * @param bidId the id for the bid to be fetched
 	 * @return bidBean the bean for the porticular id
 	 * @throws BidException if bid with paricular id does not exists
 	 */
-	BidBean getBid( BidBean bidBean ) throws BidException;
+	BidBean getBid( int bidId ) throws BidException;
 
 	/**
 	 * Function to get the lowest bid
 	 *
 	 * @param bidBean the details of the user requesting the lowest bid
 	 * @return lowest bid
-	 * @throws BidException if the user is not authorized
+	 * @throws BidException if the user is not authorized or there is no smallest bid
 	 */
 	BidBean getTheLowestBid( BidBean bidBean ) throws BidException;
 
@@ -48,6 +48,7 @@ public interface BidService {
 	 * Function to get all the bids in the db
 	 *
 	 * @return list of all the bids in the db
+	 * @throws BidException if no bid exists in db
 	 */
-	List<BidBean> getAllBids();
+	List<BidBean> getAllBids() throws BidException;
 }

@@ -1,9 +1,9 @@
 package com.bidding.app.rest;
 
-import com.bidding.app.beans.UserBean;
+import com.bidding.app.beans.BidBean;
 import com.bidding.app.common.BidException;
 import com.bidding.app.common.Response;
-import com.bidding.app.service.UserService;
+import com.bidding.app.service.BidService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,36 +13,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Rest controller for User
+ * Rest controller for Bid
  * @author ARUN P P
  */
 @RestController()
-@RequestMapping( "/rest/user" )
-public class UserController {
+@RequestMapping( "/rest/bid" )
+public class BidController {
 
-	private static final Logger LOGGER = Logger.getLogger(UserController.class);
+	private static final Logger LOGGER = Logger.getLogger(BidController.class);
 
 	@Autowired
-	private UserService userService;
+	private BidService bidService;
 
 	@RequestMapping( value = "/save", method = RequestMethod.POST )
-	public ResponseEntity<Response> saveOrUpdateUser( @RequestBody UserBean userBean )
+	public ResponseEntity<Response> saveOrUpdateUser( @RequestBody BidBean bidBean )
 	{
 		Response response = new Response();
 		try
 		{
-			//If id is zero create a new user
-			if( userBean.getUserId() == 0 )
+			//If id is zero create a new bid
+			//If id is not zero and isActive is true then it will update the bid
+			if( bidBean.isActive() )
 			{
-				userService.saveUser(userBean);
-			}
-			else if( userBean.isActive() )
-			{
-				userService.updateUser(userBean);
+				bidService.saveBid(bidBean);
 			}
 			else
 			{
-				userService.deleteUser(userBean);
+				bidService.deleteBid(bidBean);
 			}
 			response.setObject(null);
 			response.setErrorMessage(null);
@@ -57,15 +54,14 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping( value = "/get-user/{userId}", method = RequestMethod.GET )
-	public ResponseEntity<Response> getUser( @PathVariable( "userId" ) int userId )
+	@RequestMapping( value = "/get-bid/{bidId}", method = RequestMethod.GET )
+	public ResponseEntity<Response> getBid( @PathVariable( "bidId" ) int bidId )
 	{
 		Response response = new Response();
 		try
 		{
-			System.out.println(userId);
-			UserBean user = userService.getUser(userId);
-			response.setObject(user);
+			BidBean bid = bidService.getBid(bidId);
+			response.setObject(bid);
 			response.setErrorMessage(null);
 			return new ResponseEntity(response, HttpStatus.OK);
 		}
@@ -78,14 +74,34 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping( value = "/get-all-users", method = RequestMethod.GET )
-	public ResponseEntity<Response> getAllUsers()
+	@RequestMapping( value = "/get-all-bids", method = RequestMethod.GET )
+	public ResponseEntity<Response> getAllBids()
 	{
 		Response response = new Response();
 		try
 		{
-			List<UserBean> users = userService.getAllUsers();
-			response.setObject(users);
+			List<BidBean> bids = bidService.getAllBids();
+			response.setObject(bids);
+			response.setErrorMessage(null);
+			return new ResponseEntity(response, HttpStatus.OK);
+		}
+		catch( BidException e )
+		{
+			LOGGER.error(e.getMessage());
+			response.setErrorMessage(e.getErrorMessage());
+			response.setObject(null);
+			return new ResponseEntity(response, e.getHttpStatus());
+		}
+	}
+
+	@RequestMapping( value = "/get-lowest-bid", method = RequestMethod.POST )
+	public ResponseEntity<Response> getLowestBid( @RequestBody BidBean bidBean )
+	{
+		Response response = new Response();
+		try
+		{
+			BidBean bid = bidService.getTheLowestBid(bidBean);
+			response.setObject(bid);
 			response.setErrorMessage(null);
 			return new ResponseEntity(response, HttpStatus.OK);
 		}

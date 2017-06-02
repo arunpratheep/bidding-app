@@ -29,11 +29,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void saveUser( UserBean userBean ) throws BidException
 	{
-		User userData = userRepo.findByUserName(userBean.getUserName());
-		if( userData != null )
+		if( userRepo.findByUserName(userBean.getUserName()) != null )
 		{
 			LOGGER.error("User with name : " + userBean.getUserName() + " already exists");
 			throw new BidException("User with name : " + userBean.getUserName() + " already exists",
+					HttpStatus.NOT_ACCEPTABLE);
+		}
+		else if( userRepo.findByUserEmail(userBean.getUserEmail()) != null )
+		{
+			LOGGER.error("User with email : " + userBean.getUserEmail() + " already exists");
+			throw new BidException("User with email : " + userBean.getUserEmail() + " already exists",
 					HttpStatus.NOT_ACCEPTABLE);
 		}
 		userRepo.save(createUser(userBean));
@@ -57,16 +62,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserBean getUser( UserBean userBean ) throws BidException
+	public UserBean getUser( int userId ) throws BidException
 	{
-		return createUserBean(checkUserExists(userBean.getUserId()));
+		return createUserBean(checkUserExists(userId));
 	}
 
 	@Override
-	public List<UserBean> getAllUsers()
+	public List<UserBean> getAllUsers() throws BidException
 	{
 		List<UserBean> userBeanList = new ArrayList<>();
-		for( User user : userRepo.findAllUsers() )
+		final List<User> allUsers = userRepo.findAllUsers();
+		if( allUsers == null || allUsers.isEmpty() )
+		{
+			LOGGER.error("No users exist in db");
+			throw new BidException("No users exist in db", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		for( User user : allUsers )
 		{
 			userBeanList.add(createUserBean(user));
 		}
@@ -85,6 +96,7 @@ public class UserServiceImpl implements UserService {
 		user.setUserName(userBean.getUserName());
 		//Encrypt the password
 		user.setUserPassword(EncryptData.encryptPassword(userBean.getUserPassword()));
+		user.setUserEmail(userBean.getUserEmail());
 		user.setAdmin(userBean.isAdmin());
 		user.setActive(userBean.isActive());
 		return user;
@@ -100,6 +112,7 @@ public class UserServiceImpl implements UserService {
 		UserBean userBean = new UserBean();
 		userBean.setUserName(user.getUserName());
 		userBean.setActive(user.isActive());
+		userBean.setUserEmail(user.getUserEmail());
 		userBean.setUserId(user.getUserId());
 		userBean.setAdmin(user.isAdmin());
 		return userBean;

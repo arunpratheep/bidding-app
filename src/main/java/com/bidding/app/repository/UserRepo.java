@@ -20,6 +20,9 @@ public interface UserRepo extends CrudRepository<User, Integer> {
 	@Query( "FROM User u WHERE u.userName = ?1 AND u.isActive = true" )
 	User findByUserName( String userName );
 
+	@Query( "FROM User u WHERE u.userEmail = ?1 AND u.isActive = true" )
+	User findByUserEmail( String userEmail );
+
 	@Query( "FROM User u WHERE u.isActive = true" )
 	List<User> findAllUsers();
 }

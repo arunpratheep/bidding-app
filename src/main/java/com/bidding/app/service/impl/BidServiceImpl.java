@@ -55,9 +55,9 @@ public class BidServiceImpl implements BidService {
 	}
 
 	@Override
-	public BidBean getBid( BidBean bidBean ) throws BidException
+	public BidBean getBid( int bidId ) throws BidException
 	{
-		return createBidBean(checkIfBidExists(bidBean.getBidId()));
+		return createBidBean(checkIfBidExists(bidId));
 	}
 
 	@Override
@@ -65,18 +65,31 @@ public class BidServiceImpl implements BidService {
 	{
 		User user = userRepo.findByUserId(bidBean.getUserId());
 		//Check if user has the privilege to access the data
-		if( user == null || (user != null && !user.isAdmin()) )
+		if( user == null || !user.isAdmin() )
 		{
+			LOGGER.error("User unauthorized");
 			throw new BidException("User unauthorized", HttpStatus.FORBIDDEN);
 		}
-		return createBidBean(bidRepo.getTheSmallestBid().get(0));
+		List<Bid> theSmallestBid = bidRepo.getTheSmallestBid();
+		if( theSmallestBid == null || theSmallestBid.isEmpty() )
+		{
+			LOGGER.error("No smallest bid");
+			throw new BidException("No smallest bid", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return createBidBean(theSmallestBid.get(0));
 	}
 
 	@Override
-	public List<BidBean> getAllBids()
+	public List<BidBean> getAllBids() throws BidException
 	{
 		List<BidBean> bidBeanList = new ArrayList<>();
-		for( Bid bid : bidRepo.getAllBids() )
+		List<Bid> bids = bidRepo.getAllBids();
+		if( bids == null || bids.isEmpty() )
+		{
+			LOGGER.error("No bid exist in db");
+			throw new BidException("No bid exist in db", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		for( Bid bid : bids )
 		{
 			bidBeanList.add(createBidBean(bid));
 		}
@@ -117,7 +130,7 @@ public class BidServiceImpl implements BidService {
 	 * Method to check if bid exists or not
 	 * @param bidId the id to check whether the bid exits in the db
 	 * @return bid if data exists in the db
-	 * @throws Exception if bid with given id does not exists in the db
+	 * @throws BidException if bid with given id does not exists in the db
 	 */
 	private Bid checkIfBidExists( int bidId ) throws BidException
 	{
@@ -129,6 +142,5 @@ public class BidServiceImpl implements BidService {
 			throw new BidException("Bid with id - " + bidId + " does not exists", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return bid;
-
 	}
 }

@@ -17,6 +17,8 @@ public class User {
 	private String userName;
 	@Column( name = "user_password" )
 	private String userPassword;
+	@Column( name = "user_email" )
+	private String userEmail;
 	@Column( name = "user_is_admin" )
 	private boolean isAdmin;
 	@Column( name = "user_is_active" )
@@ -50,6 +52,16 @@ public class User {
 	public void setUserPassword( String userPassword )
 	{
 		this.userPassword = userPassword;
+	}
+
+	public String getUserEmail()
+	{
+		return userEmail;
+	}
+
+	public void setUserEmail( String userEmail )
+	{
+		this.userEmail = userEmail;
 	}
 
 	public boolean isAdmin()

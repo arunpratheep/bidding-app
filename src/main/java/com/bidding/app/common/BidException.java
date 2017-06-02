@@ -15,8 +15,8 @@ public class BidException extends Exception {
 
 	/**
 	 * Constructor to create custom exception
-	 * @param errorMessage
-	 * @param httpStatus
+	 * @param errorMessage details of the error
+	 * @param httpStatus status of the error
 	 */
 	public BidException( String errorMessage, HttpStatus httpStatus )
 	{

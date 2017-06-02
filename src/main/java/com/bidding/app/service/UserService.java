@@ -15,7 +15,7 @@ public interface UserService {
 	 * Function to save the user
 	 *
 	 * @param userBean the user data that is to be saved
-	 * @throws BidException If user with particular name exists
+	 * @throws BidException If user with particular name or email exists
 	 */
 	void saveUser( UserBean userBean ) throws BidException;
 
@@ -38,16 +38,17 @@ public interface UserService {
 	/**
 	 * Function to get user by userId
 	 *
-	 * @param userBean the id of the user to be fetched
+	 * @param userId the id of the user to be fetched
 	 * @return user the user bean for that particular id
 	 * @throws BidException if user with particular id does not exists
 	 */
-	UserBean getUser( UserBean userBean ) throws BidException;
+	UserBean getUser( int userId ) throws BidException;
 
 	/**
 	 * Function to get all users in the db
 	 *
 	 * @return the list of all the users in the db
+	 * @throws BidException if no user exists in db
 	 */
-	List<UserBean> getAllUsers();
+	List<UserBean> getAllUsers() throws BidException;
 }
