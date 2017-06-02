@@ -89,13 +89,14 @@ button {
 
 .profile__avatar {
     position: absolute;
+    margin-top: -34px;
     z-index: 1;
     left: 50%;
     transform: translateX(-50%);
     border-radius: 1.25em;
     overflow: hidden;
-    width: 8em;
-    height: 8em;
+    width: 10em;
+    height: 10em;
     display: block;
     transition: transform .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     will-change: transform;

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Material Design Login Form</title>
+    <title>Bid</title>
 
     <link rel="stylesheet" href="../css/bid.css"/>
     <script src="../lib/jquery-1.11.3.min.js"></script>
@@ -21,16 +21,15 @@
         <div class="profile__form">
             <div class="profile__fields">
                 <div class="field">
-                    <input type="text" id="digit1" class="input" maxlength="1" required pattern=.*\D.*/>
-                    <input type="text" id="digit2" class="input" maxlength="1" required pattern=.*\D.*/>
+                    <input type="text" id="digit1" class="input" maxlength="1"/>
+                    <input type="text" id="digit2" class="input" maxlength="1" required pattern="[0-9]{1}"/>
                     <label class="dot">.</label>
-                    <input type="text" id="digit3" class="input" maxlength="1" required pattern=.*\D.*/>
-                    <input type="text" id="digit4" class="input" maxlength="1" required pattern=.*\D.*/>
-
+                    <input type="text" id="digit3" class="input" maxlength="1" required pattern="[0-9]{1}"/>
+                    <input type="text" id="digit4" class="input" maxlength="1" required pattern="[0-9]{1}"/>
                 </div>
                 <div class="profile__footer center">
                     <div class="button raised blue">
-                        <div class="center" fit>Submit</div>
+                        <div class="center">Submit</div>
                     </div>
                 </div>
             </div>
