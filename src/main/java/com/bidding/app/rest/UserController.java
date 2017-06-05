@@ -31,20 +31,21 @@ public class UserController {
 		Response response = new Response();
 		try
 		{
+			UserBean user = null;
 			//If id is zero create a new user
 			if( userBean.getUserId() == 0 )
 			{
-				userService.saveUser(userBean);
+				user = userService.saveUser(userBean);
 			}
 			else if( userBean.isActive() )
 			{
-				userService.updateUser(userBean);
+				user = userService.updateUser(userBean);
 			}
 			else
 			{
 				userService.deleteUser(userBean);
 			}
-			response.setObject(null);
+			response.setObject(user);
 			response.setErrorMessage(null);
 			return new ResponseEntity(response, HttpStatus.OK);
 		}

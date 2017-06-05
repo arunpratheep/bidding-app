@@ -15,17 +15,19 @@ public interface UserService {
 	 * Function to save the user
 	 *
 	 * @param userBean the user data that is to be saved
+	 * @return userBean the saved user object
 	 * @throws BidException If user with particular name or email exists
 	 */
-	void saveUser( UserBean userBean ) throws BidException;
+	UserBean saveUser(UserBean userBean ) throws BidException;
 
 	/**
 	 * Function to update the user
 	 *
 	 * @param userBean the user data that is to be updated
+	 * @return userBean the updated user object
 	 * @throws BidException If user with particular id does not exists
 	 */
-	void updateUser( UserBean userBean ) throws BidException;
+	UserBean updateUser( UserBean userBean ) throws BidException;
 
 	/**
 	 * Function to delete the user

@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 	private UserRepo userRepo;
 
 	@Override
-	public void saveUser( UserBean userBean ) throws BidException
+	public UserBean saveUser( UserBean userBean ) throws BidException
 	{
 		if( userRepo.findByUserName(userBean.getUserName()) != null )
 		{
@@ -41,16 +41,16 @@ public class UserServiceImpl implements UserService {
 			throw new BidException("User with email : " + userBean.getUserEmail() + " already exists",
 					HttpStatus.NOT_ACCEPTABLE);
 		}
-		userRepo.save(createUser(userBean));
+		return createUserBean(userRepo.save(createUser(userBean)));
 	}
 
 	@Override
-	public void updateUser( UserBean userBean ) throws BidException
+	public UserBean updateUser( UserBean userBean ) throws BidException
 	{
 		User user = checkUserExists(userBean.getUserId());
 		User updatedUser = createUser(userBean);
 		updatedUser.setUserId(user.getUserId());
-		userRepo.save(user);
+		return createUserBean(userRepo.save(user));
 	}
 
 	@Override
